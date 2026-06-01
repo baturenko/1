@@ -184,15 +184,15 @@
 <body>
 
     <div class="container">
-        <h1>How <a href="https://github.com/mme/headroom" target="_blank">Headroom</a> Optimizes Claude Code Token Usage</h1>
+        <h1>How <a href="https://github.com/chopratejas/headroom" target="_blank">Headroom</a> Optimizes Claude Code Token Usage</h1>
         <div class="subtitle">Technical Analysis & Integration Guide</div>
 
-        <p><strong><a href="https://github.com/mme/headroom" target="_blank">Headroom</a></strong> is an open-source context optimization tool that runs locally as a proxy server between your machine and Anthropic. Because Claude Code interacts heavily with terminal commands, file reads, and Model Context Protocol (MCP) servers, it naturally generates a massive amount of token bloat. </p>
+        <p><strong><a href="https://github.com/chopratejas/headroom" target="_blank">Headroom</a></strong> is an open-source context optimization tool that runs locally as a proxy server between your machine and Anthropic. Because Claude Code interacts heavily with terminal commands, file reads, and Model Context Protocol (MCP) servers, it naturally generates a massive amount of token bloat. </p>
 
-        <p><a href="https://github.com/mme/headroom" target="_blank">Headroom</a> intercepts these requests and aggressively compresses the incoming context, typically cutting Claude Code token usage by <strong>~50% to 70%</strong> without degrading the quality of the model's output.</p>
+        <p><a href="https://github.com/chopratejas/headroom" target="_blank">Headroom</a> intercepts these requests and aggressively compresses the incoming context, typically cutting Claude Code token usage by <strong>~50% to 70%</strong> without degrading the quality of the model's output.</p>
 
         <div class="callout">
-            <p><strong>Token Optimization:</strong> By routing Claude Code local API calls through <a href="https://github.com/mme/headroom" target="_blank">Headroom</a>, repetitive files, redundant logs, and terminal state context are pruned before they enter Anthropic's processing pipeline, reducing operational costs.</p>
+            <p><strong>Token Optimization:</strong> By routing Claude Code local API calls through <a href="https://github.com/chopratejas/headroom" target="_blank">Headroom</a>, repetitive files, redundant logs, and terminal state context are pruned before they enter Anthropic's processing pipeline, reducing operational costs.</p>
         </div>
 
         <h2>Three Primary Optimization Mechanisms</h2>
@@ -200,24 +200,24 @@
         <h3>1. SmartCrusher (Tool Output Compression)</h3>
         <p>AI coding agents spend a massive percentage of their token budget reading the raw outputs of tools. For example, reading a long log file, running a verbose test suite, or pulling a large JSON array from a local database can instantly dump thousands of repetitive tokens into Claude's memory window.</p>
         <ul>
-            <li><strong>How it helps:</strong> <a href="https://github.com/mme/headroom" target="_blank">Headroom</a> intercepts these heavy payloads and intelligently compresses them down (e.g., stripping out verbose boilerplate, logs, or repeating data patterns).</li>
-            <li><strong>Why it's safe:</strong> The compression is completely <strong>reversible</strong>. <a href="https://github.com/mme/headroom" target="_blank">Headroom</a> strips the noise but assigns a hash to the original data. It hands Claude the compressed version along with an instruction: <em>"If you need the full, unedited data, call <code>retrieve_compressed(hash)</code>."</em> If Claude actually needs to look at a buried line, it can fetch it on demand, ensuring no critical data is permanently lost.</li>
+            <li><strong>How it helps:</strong> <a href="https://github.com/chopratejas/headroom" target="_blank">Headroom</a> intercepts these heavy payloads and intelligently compresses them down (e.g., stripping out verbose boilerplate, logs, or repeating data patterns).</li>
+            <li><strong>Why it's safe:</strong> The compression is completely <strong>reversible</strong>. <a href="https://github.com/chopratejas/headroom" target="_blank">Headroom</a> strips the noise but assigns a hash to the original data. It hands Claude the compressed version along with an instruction: <em>"If you need the full, unedited data, call <code>retrieve_compressed(hash)</code>."</em> If Claude actually needs to look at a buried line, it can fetch it on demand, ensuring no critical data is permanently lost.</li>
         </ul>
 
         <h3>2. Cache Aligner (Maximizing Prefix Caching)</h3>
         <p>Anthropic charges significantly less for input tokens that hit their <strong>prompt cache</strong>. However, prompt caching only works if the prefix of the prompt remains completely static across conversation turns.</p>
         <ul>
             <li>When Claude Code runs shell commands or invokes dynamic tools out of order, it injects highly variable data into the history. This shatters the cache, forcing you to pay full price for the entire conversation window on the next turn.</li>
-            <li><strong>How it helps:</strong> <a href="https://github.com/mme/headroom" target="_blank">Headroom</a> stabilizes dynamic content and organizes your history pipeline so that static, unchanging blocks stay grouped together at the front of the prompt. This forces Claude to hit Anthropic's prompt cache much more consistently, saving both money and processing latency.</li>
+            <li><strong>How it helps:</strong> <a href="https://github.com/chopratejas/headroom" target="_blank">Headroom</a> stabilizes dynamic content and organizes your history pipeline so that static, unchanging blocks stay grouped together at the front of the prompt. This forces Claude to hit Anthropic's prompt cache much more consistently, saving both money and processing latency.</li>
         </ul>
 
         <h3>3. Mitigating Sub-Agent Token Multipliers</h3>
-        <p>When Claude Code decides to spin up sub-agents to research isolated problems, it loses the prefix caching benefits of your main conversation branch. Sub-agents often end up reading the same files or executing similar foundational steps over again in their own separate context windows. <a href="https://github.com/mme/headroom" target="_blank">Headroom</a> optimizes the context delivery for these sub-agents as well, filtering out redundant instructions before they pull from your credit balance.</p>
+        <p>When Claude Code decides to spin up sub-agents to research isolated problems, it loses the prefix caching benefits of your main conversation branch. Sub-agents often end up reading the same files or executing similar foundational steps over again in their own separate context windows. <a href="https://github.com/chopratejas/headroom" target="_blank">Headroom</a> optimizes the context delivery for these sub-agents as well, filtering out redundant instructions before they pull from your credit balance.</p>
 
         <hr>
 
         <h2>Local Setup & Configuration</h2>
-        <p><a href="https://github.com/mme/headroom" target="_blank">Headroom</a> functions locally as a zero-config pass-through. You install it via pip and run your sessions through it using an environment variable wrapper:</p>
+        <p><a href="https://github.com/chopratejas/headroom" target="_blank">Headroom</a> functions locally as a zero-config pass-through. You install it via pip and run your sessions through it using an environment variable wrapper:</p>
 
         <pre><code><span class="comment"># Start the local proxy server</span>
 headroom proxy --port 8787
@@ -229,7 +229,7 @@ claude</code></pre>
         <p>Alternatively, you can skip explicit variable exports by running the execution wrapper utility:</p>
         <pre><code>headroom wrap claude</code></pre>
 
-        <p>Because Claude Code handles authentication directly with your Anthropic account or subscription, <a href="https://github.com/mme/headroom" target="_blank">Headroom</a> simply acts as a local filter that thins out the noise before it hits the web api endpoints.</p>
+        <p>Because Claude Code handles authentication directly with your Anthropic account or subscription, <a href="https://github.com/chopratejas/headroom" target="_blank">Headroom</a> simply acts as a local filter that thins out the noise before it hits the web api endpoints.</p>
     </div>
 
 </body>
